@@ -1,6 +1,6 @@
 {
   "name": "playwright-specgen",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Turn Playwright trace.zip into flows, API sequences, and ready-to-run tests",
   "type": "module",
   "bin": {
