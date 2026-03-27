@@ -73,10 +73,10 @@ Record existing flows → get behavioral specs → modernise → replay tests �
 
 Specifically:
 
-- **Before you touch anything** — record Playwright traces of the critical user journeys in the current app. Run playwright-specgen. Commit the `flows/` and `apis/` directories. These become your baseline.
-- **Understand hidden API dependencies** — the `apis/` output surfaces every backend call the UI makes, including undocumented endpoints that only appear during specific interactions. You will not find these by reading frontend code alone.
-- **After modernisation** — run your Playwright tests against the new UI. If the flows diff cleanly against the baseline, behaviour is preserved. If steps or API triggers change, you know exactly where.
-- **Hand-off to AI agents** — feed the flow YAML and evidence JSON to your coding agent as the definition of correct behaviour. See [playwright-specgen in the age of AI Agents](#playwright-specgen-in-the-age-of-ai-agents).
+- **Before you touch anything** - record Playwright traces of the critical user journeys in the current app. Run playwright-specgen. Commit the `flows/` and `apis/` directories. These become your baseline.
+- **Understand hidden API dependencies** - the `apis/` output surfaces every backend call the UI makes, including undocumented endpoints that only appear during specific interactions. You will not find these by reading frontend code alone.
+- **After modernisation** - run your Playwright tests against the new UI. If the flows diff cleanly against the baseline, behaviour is preserved. If steps or API triggers change, you know exactly where.
+- **Hand-off to AI agents** - feed the flow YAML and evidence JSON to your coding agent as the definition of correct behaviour. See [playwright-specgen in the age of AI Agents](#playwright-specgen-in-the-age-of-ai-agents).
 
 This works even if you have **zero existing test coverage**. The trace is the test.
 
@@ -195,9 +195,36 @@ This inverts the usual AI development loop - instead of hoping AI guesses the ri
 
 ### 6. MCP integration
 
-playwright-specgen outputs are structured data that can be served as **MCP (Model Context Protocol) resources** - making flows, API sequences, and evidence available to any MCP-capable AI agent automatically. A single recorded session becomes a live context resource for your entire AI toolchain.
+playwright-specgen ships with a built-in **MCP (Model Context Protocol) server** that exposes flows, API sequences, and evidence as tools any MCP-capable AI agent can call directly - without leaving the conversation.
 
-> MCP server is in active development. Watch the repo for updates.
+Same npm package, two modes:
+
+| Mode | Command | Use case |
+|------|---------|----------|
+| CLI | `playwright-specgen parse trace.zip` | Terminal, CI, scripts |
+| MCP server | `playwright-specgen-mcp` | Claude Desktop, Cursor, any MCP client |
+
+**Configure in Claude Desktop (`claude_desktop_config.json`):**
+
+```json
+{
+  "mcpServers": {
+    "playwright-specgen": {
+      "command": "playwright-specgen-mcp"
+    }
+  }
+}
+```
+
+**Available tool: `parse_trace`**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `trace_path` | string | ✅ | Path to the `trace.zip` file |
+| `outputs` | array | - | Which outputs to return: `"flow"`, `"api"`, `"test"`, `"evidence"`. Defaults to all four. |
+| `write_files` | boolean | - | If `true`, also write `flows/`, `apis/`, `tests/`, `evidence/` to disk (same as CLI). Defaults to `false`. |
+
+Each requested output is returned as a **separate content block**, so the agent can reason about just the parts it needs without processing a single large dump.
 
 ---
 
@@ -216,7 +243,7 @@ playwright-specgen outputs are structured data that can be served as **MCP (Mode
 
 ## Quick start
 
-**Option A — try it now with the included sample (no Playwright setup needed):**
+**Option A - try it now with the included sample (no Playwright setup needed):**
 
 ```bash
 # 1. Install
@@ -229,14 +256,14 @@ cd playwright-specgen
 # 3. Run playwright-specgen on the real GitHub PR review trace
 playwright-specgen parse samples/github-pr-review.zip
 
-# 4. Inspect outputs — these are the exact files playwright-specgen generated
+# 4. Inspect outputs - these are the exact files playwright-specgen generated
 cat flows/github-pr-review.yaml
 cat tests/github-pr-review.spec.ts
 ```
 
 The `samples/github-pr-review.zip` file is a real Playwright trace recorded from the `microsoft/TypeScript` repository: issues list → click issue → PRs list → click PR → Files Changed tab. The expected outputs are shown in [Real-world example](#real-world-example-microsofttypescript-pr-review) below.
 
-**Option B — record your own trace:**
+**Option B - record your own trace:**
 
 ```bash
 # 1. Install
@@ -257,7 +284,7 @@ cat tests/trace.spec.ts
 
 ## Real-world example: microsoft/TypeScript PR review
 
-Exact playwright-specgen output from running `playwright-specgen parse samples/github-pr-review.zip` — the trace file included in this repo. Flow: **browse issues → open a pull request → view files changed** on the public microsoft/TypeScript repository.
+Exact playwright-specgen output from running `playwright-specgen parse samples/github-pr-review.zip` - the trace file included in this repo. Flow: **browse issues → open a pull request → view files changed** on the public microsoft/TypeScript repository.
 
 To record your own version of this trace:
 
@@ -353,11 +380,11 @@ steps:
 ```
 
 What this reveals immediately, without reading any source code:
-- Clicking an issue triggers `/_graphql` calls — hovercards and lazy-loaded UI are powered by GraphQL, not REST
-- Opening a PR fires **11 parallel API calls**: hovercard, page content, partial links, CI badge status, checks rollups, diff stats, tab counts, processing indicators, issues preheat, and files — all before you've interacted with the page
-- `POST /pull_request_review_decisions` fires automatically on the PRs list — GitHub pre-fetches your review status for every visible PR before you open any of them
-- The Files Changed tab triggers `POST /diffs/<sha>..<sha>` — diffs are computed server-side, identified by full commit SHA pairs
-- `GET /issues/preheat` fires in the background during navigation — GitHub pre-warms issue data speculatively
+- Clicking an issue triggers `/_graphql` calls - hovercards and lazy-loaded UI are powered by GraphQL, not REST
+- Opening a PR fires **11 parallel API calls**: hovercard, page content, partial links, CI badge status, checks rollups, diff stats, tab counts, processing indicators, issues preheat, and files - all before you've interacted with the page
+- `POST /pull_request_review_decisions` fires automatically on the PRs list - GitHub pre-fetches your review status for every visible PR before you open any of them
+- The Files Changed tab triggers `POST /diffs/<sha>..<sha>` - diffs are computed server-side, identified by full commit SHA pairs
+- `GET /issues/preheat` fires in the background during navigation - GitHub pre-warms issue data speculatively
 
 ---
 
@@ -461,10 +488,16 @@ npm install -g playwright-specgen
 pnpm add -g playwright-specgen
 ```
 
-Once installed, `playwright-specgen` is available globally:
+Once installed, both the CLI and MCP server are available globally:
 
 ```bash
+# CLI
 playwright-specgen parse trace.zip
+psg parse trace.zip
+
+# MCP server (for Claude Desktop, Cursor, etc.)
+playwright-specgen-mcp
+psg-mcp
 ```
 
 ### Development setup
@@ -484,7 +517,7 @@ pnpm build
 pnpm link --global
 ```
 
-> The compiled CLI entry point is `dist/index.js`, registered as `playwright-specgen` in `package.json#bin`.
+> The CLI entry point is `dist/index.js` (`playwright-specgen` / `psg`) and the MCP server entry point is `dist/mcp.js` (`playwright-specgen-mcp` / `psg-mcp`), both registered in `package.json#bin`.
 
 ---
 
@@ -572,7 +605,7 @@ steps:
 
 ### `apis/<name>.yaml`
 
-A structured, ordered list of all API calls in the trace. Static assets and 4xx/5xx responses are filtered out. Each entry is an object with `method`, `path`, and `status` — consistent with the trigger objects in the flow YAML and directly parseable by scripts and AI tools.
+A structured, ordered list of all API calls in the trace. Static assets and 4xx/5xx responses are filtered out. Each entry is an object with `method`, `path`, and `status` - consistent with the trigger objects in the flow YAML and directly parseable by scripts and AI tools.
 
 ```yaml
 api_sequence:
@@ -605,7 +638,7 @@ test('login flow', async ({ page }) => {
 
 ### `evidence/<name>.trace.json`
 
-Raw parsed data keyed under `source`, `actions`, and `network` — ready for debugging or feeding to an LLM as factual app context.
+Raw parsed data keyed under `source`, `actions`, and `network` - ready for debugging or feeding to an LLM as factual app context.
 
 ```json
 {
@@ -742,7 +775,7 @@ jobs:
 | **CI `--stdout` mode** | ✅ | ❌ | ❌ | ❌ |
 | **Works on legacy apps with no existing tests** | ✅ | ✅ | ✅ | ✅ |
 
-**Key difference:** Playwright Codegen and Cypress Studio require an interactive recording session and produce only a test file. HAR export gives you raw network data but no action correlation and no test. playwright-specgen is the only tool that takes an existing trace and produces correlated flows, API maps, tests, and evidence in one pass — without touching the browser again.
+**Key difference:** Playwright Codegen and Cypress Studio require an interactive recording session and produce only a test file. HAR export gives you raw network data but no action correlation and no test. playwright-specgen is the only tool that takes an existing trace and produces correlated flows, API maps, tests, and evidence in one pass - without touching the browser again.
 
 ---
 
@@ -795,7 +828,8 @@ src/
   generator/    - emit YAML and .spec.ts strings
   cli/          - commander CLI (parse command + --stdout flag)
   types/        - shared TypeScript interfaces
-  index.ts      - entry point
+  index.ts      - CLI entry point
+  mcp.ts        - MCP server entry point (playwright-specgen-mcp / psg-mcp)
 
 tests/
   fixtures/     - in-memory zip builder for unit tests
