@@ -1,0 +1,80 @@
+flow: github-pr-review
+intent: User performs github pr review
+component_type: navigation
+steps:
+  - action: navigate
+    url: https://github.com/microsoft/TypeScript/issues
+    role: precondition
+  - action: click
+    selector: a[data-hovercard-type="issue"] >> nth=0
+    role: precondition
+    triggers:
+      - method: GET
+        path: /_graphql
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pulls
+        status: 200
+      - method: POST
+        path: /pull_request_review_decisions
+        status: 200
+  - action: navigate
+    url: https://github.com/microsoft/TypeScript/pulls
+    role: precondition
+  - action: click
+    selector: a[data-hovercard-type="pull_request"] >> nth=0
+    role: precondition
+    triggers:
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/hovercard
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/partials/links
+        status: 200
+      - method: POST
+        path: /commits/badges
+        status: 200
+      - method: POST
+        path: /microsoft/TypeScript/commits/checks-statuses-rollups
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/page_data/diffstat
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/page_data/tab_counts
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/partials/processing_indicator
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/partials/processing_indicator
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/issues/preheat
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/files
+        status: 200
+  - action: click
+    selector: "[data-tab-item=\"files-tab\"], a[href*=\"/files\"] >> nth=0"
+    role: goal_action
+    triggers:
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/partials/processing_indicator
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/partials/processing_indicator
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/issues/preheat
+        status: 200
+      - method: GET
+        path: /microsoft/TypeScript/pull/63248/files
+        status: 200
+    outcome: success
+  - action: navigate
+    url: https://github.com/microsoft/TypeScript/pull/63248/files
+    role: precondition

@@ -1,0 +1,61 @@
+api_sequence:
+  - method: GET
+    path: /microsoft/TypeScript/issues
+    status: 200
+  - method: GET
+    path: /_filter/issue_fields
+    status: 200
+  - method: GET
+    path: /_graphql
+    status: 200
+  - method: GET
+    path: /_graphql
+    status: 200
+  - method: GET
+    path: /_graphql
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pulls
+    status: 200
+  - method: POST
+    path: /pull_request_review_decisions
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pull/63248/hovercard
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pull/63248
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pull/63248/partials/links
+    status: 200
+  - method: POST
+    path: /commits/badges
+    status: 200
+  - method: POST
+    path: /microsoft/TypeScript/commits/checks-statuses-rollups
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pull/63248/page_data/diffstat
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pull/63248/page_data/tab_counts
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pull/63248/partials/processing_indicator
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pull/63248/partials/processing_indicator
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/issues/preheat
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pull/63248/files
+    status: 200
+  - method: GET
+    path: /microsoft/TypeScript/pull/63248/partials/processing_indicator
+    status: 200
+  - method: POST
+    path: /microsoft/TypeScript/diffs/77ddb5b443ae3479b91bcaff0920d9f1ef0d31bc..43da8b5d452fa23d6a4dda27dfc9157988dbc7b8
+    status: 200

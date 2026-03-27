@@ -1,0 +1,60 @@
+{
+  "name": "playwright-specgen",
+  "version": "0.1.0",
+  "description": "Turn Playwright trace.zip into flows, API sequences, and ready-to-run tests",
+  "type": "module",
+  "bin": {
+    "playwright-specgen": "dist/index.js",
+    "psg": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "playwright",
+    "trace",
+    "spec",
+    "test-generator",
+    "flow",
+    "api",
+    "e2e",
+    "automation"
+  ],
+  "author": "trycatchkamal",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "js-yaml": "^4.1.0",
+    "unzipper": "^0.12.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.0.0",
+    "@types/unzipper": "^0.10.9",
+    "@vitest/coverage-v8": "^1.0.0",
+    "archiver": "^6.0.0",
+    "@types/archiver": "^6.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.0.0"
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "source": "github-pr-review.zip",
+  "actions": [
+    {
+      "type": "navigate",
+      "url": "https://github.com/microsoft/TypeScript/issues",
+      "timestamp": 1467.81
+    },
+    {
+      "type": "click",
+      "selector": "a[data-hovercard-type=\"issue\"] >> nth=0",
+      "timestamp": 13242.92
+    },
+    {
+      "type": "navigate",
+      "url": "https://github.com/microsoft/TypeScript/pulls",
+      "timestamp": 13368.287
+    },
+    {
+      "type": "click",
+      "selector": "a[data-hovercard-type=\"pull_request\"] >> nth=0",
+      "timestamp": 16070.422
+    },
+    {
+      "type": "click",
+      "selector": "[data-tab-item=\"files-tab\"], a[href*=\"/files\"] >> nth=0",
+      "timestamp": 17833.478
+    },
+    {
+      "type": "navigate",
+      "url": "https://github.com/microsoft/TypeScript/pull/63248/files",
+      "timestamp": 19055.049
+    }
+  ],
+  "network": [
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/issues",
+      "status": 200,
+      "timestamp": 1488.347
+    },
+    {
+      "method": "GET",
+      "path": "/_filter/issue_fields",
+      "status": 200,
+      "timestamp": 11675.324
+    },
+    {
+      "method": "GET",
+      "path": "/_graphql",
+      "status": 200,
+      "timestamp": 11806.451
+    },
+    {
+      "method": "GET",
+      "path": "/_graphql",
+      "status": 200,
+      "timestamp": 11925.042
+    },
+    {
+      "method": "GET",
+      "path": "/_graphql",
+      "status": 200,
+      "timestamp": 13350.393
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pulls",
+      "status": 200,
+      "timestamp": 13395.599
+    },
+    {
+      "method": "POST",
+      "path": "/pull_request_review_decisions",
+      "status": 200,
+      "timestamp": 14617.106
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pull/63248/hovercard",
+      "status": 200,
+      "timestamp": 16643.003
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pull/63248",
+      "status": 200,
+      "timestamp": 16170.268
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pull/63248/partials/links",
+      "status": 200,
+      "timestamp": 17540.528
+    },
+    {
+      "method": "POST",
+      "path": "/commits/badges",
+      "status": 200,
+      "timestamp": 17550.436
+    },
+    {
+      "method": "POST",
+      "path": "/microsoft/TypeScript/commits/checks-statuses-rollups",
+      "status": 200,
+      "timestamp": 17550.696
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pull/63248/page_data/diffstat",
+      "status": 200,
+      "timestamp": 17680.463
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pull/63248/page_data/tab_counts",
+      "status": 200,
+      "timestamp": 17680.278
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pull/63248/partials/processing_indicator",
+      "status": 200,
+      "timestamp": 17873.361
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pull/63248/partials/processing_indicator",
+      "status": 200,
+      "timestamp": 17873.634
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/issues/preheat",
+      "status": 200,
+      "timestamp": 17921.162
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pull/63248/files",
+      "status": 200,
+      "timestamp": 17972.511
+    },
+    {
+      "method": "GET",
+      "path": "/microsoft/TypeScript/pull/63248/partials/processing_indicator",
+      "status": 200,
+      "timestamp": 19982.918
+    },
+    {
+      "method": "POST",
+      "path": "/microsoft/TypeScript/diffs/77ddb5b443ae3479b91bcaff0920d9f1ef0d31bc..43da8b5d452fa23d6a4dda27dfc9157988dbc7b8",
+      "status": 200,
+      "timestamp": 19965.203
+    }
+  ]
+}
